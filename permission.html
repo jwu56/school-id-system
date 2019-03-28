@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link href="https://unpkg.com/air-datepicker@2.2.3/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="https://unpkg.com/air-datepicker@2.2.3/dist/js/datepicker.min.js"></script>
+<script src="https://unpkg.com/air-datepicker@2.2.3/dist/js/i18n/datepicker.en.js "></script>
+<style type="text/css" media="print">
+   .no-print { display: none; }
+</style>
+<style>
+input[type=text]::-ms-clear { display: none; }
+</style>
+<style>
+#photo {
+float: right;
+}
+#reash1 {
+display: none;
+}
+#validh1 {
+display:none;
+}
+#date {
+display:none;
+}
+#slip > #nameh1 {
+display: none;
+}
+#slip {
+width: 500px;
+border: 3px dashed red;
+}
+#slip > h1 {
+font-size: 22px;
+font-family: sans-serif;
+}
+#info {
+margin: auto;
+max-width: 420px;
+}
+#info > a {
+padding: 20px 0;
+}
+#info > input {
+margin: 20px 0;
+}
+</style>
+<title>Jerrynet | Generate a permission slip</title>
+
+</head>
+<body>
+<form id="info">
+<a class="no-print">Full Name: </a><input type="text" class="no-print" id="nameInput"><br>
+<a class="no-print">Reason for pass: </a><input type="text" class="no-print" id="reashInput"><br>
+<a class="no-print">Valid till: </a><input type="text" class="no-print datepicker-here" id="validInput" data-timepicker="true" data-language="en"><br>
+<a class="no-print">Picture: </a><input type="file" id="upload" accept="image/*" class="no-print" onchange="readURL(this)"><br>
+<a class="no-print">Date issued: </a><input type="text" class="no-print datepicker-here" id="dateInput" data-timepicker="true" data-language="en"><button id="setNowbtn" type="button" class="no-print">Now</button><br>
+<button class="no-print" onclick="javascript:window.print()">Print</button>
+<div id="slip">
+<img id="photo"></img>
+<h1 id="nameh1">Name: <span id="name"></span></h1><br>
+<h1 id="reash1">Reason for pass: <span id="reash"></span></h1>
+<h1 id="validh1">Valid till: <span id="validity"></span></h1>
+<p id="date">This slip has been issued on the <span id="dateis"></span>.</p>
+</div>
+<script>
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $('#photo')
+        .attr('src', e.target.result)
+        .width(150)
+        .height(200);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+function updatename () {
+
+		if (document.getElementById('nameh1').style.display = "none"){
+		var namh1 = document.getElementById('nameh1');
+		namh1.style.display = "inline-block";
+	}
+	document.getElementById('name').textContent = nameInput.value;
+}
+function updatevalidity() {
+validity.textContent = validInput.value;
+}
+function updatedate() {
+dateis.textContent = dateInput.value;
+}
+function setnow() {
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+
+var yyyy = today.getFullYear();
+if (dd < 10) {
+  dd = '0' + dd;
+} 
+if (mm < 10) {
+  mm = '0' + mm;
+} 
+var todayt = dd + '/' + mm + '/' + yyyy;
+var now = new Date();
+var hh = now.getHours();
+var min = now.getMinutes();
+				
+var ampm = (hh>=12)?'pm':'am';
+hh = hh%12;
+hh = hh?hh:12;
+hh = hh<10?'0'+hh:hh;
+min = min<10?'0'+min:min;
+				
+var time = hh+":"+min+" "+ampm;
+var TimeDate = todayt+' '+time;
+dateInput.value = TimeDate;
+issueddate();
+}
+function cleardate() {
+dateInput.value = '';
+}
+function issueddate() {
+		if (document.getElementById('date').style.display = "none"){
+		var dte = document.getElementById('date');
+		dte.style.display = "inline-block";
+	}
+	document.getElementById('dateis').textContent = dateInput.value;
+}
+function vissueddate() {
+		if (document.getElementById('validh1').style.display = "none"){
+		var vde = document.getElementById('validh1');
+		vde.style.display = "inline-block";
+	}
+	document.getElementById('validity').textContent = validInput.value;
+}
+function reasonupdate() {
+		if (document.getElementById('reash1').style.display = "none"){
+		var rse = document.getElementById('reash1');
+		rse.style.display = "inline-block";
+	}
+	document.getElementById('reash').textContent = reashInput.value;
+}
+setNowbtn.onclick = setnow;
+dateInput.onclick = cleardate;
+nameInput.oninput = updatename;
+dateInput.oninput = issueddate;
+dateInput.onchange = issueddate;
+validInput.oninput = vissueddate;
+validInput.onchange = vissueddate;
+reashInput.oninput = reasonupdate;
+$('#dateInput').datepicker({
+    onSelect: function(formattedDate, date, inst) {
+        $(inst.el).trigger('change');
+    }
+});
+$('#validInput').datepicker({
+    onSelect: function(formattedDate, date, inst) {
+        $(inst.el).trigger('change');
+    }
+});
+</script>
+</form>
+</body>
+</html>
